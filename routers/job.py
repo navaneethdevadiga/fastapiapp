@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from schemas import job
 from schemas.job import JobCreate, JobUpdate
 
 router = APIRouter(prefix="/job", tags=["job"])
@@ -27,9 +26,6 @@ def update_job(job_id: int, job: JobUpdate):
 def delete_job(job_id: int):
     jobs.pop(job_id)
     return jobs
-
-
-
 
 # @router.get("/")
 # def read_job():

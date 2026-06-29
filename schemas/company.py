@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from .job import JobResponse
 
+
 class CompanyBase(BaseModel):
     name: str
     email: str
@@ -15,9 +16,9 @@ class CompanyUpdate(CompanyBase):
     email: Optional[str] = None
     phone: Optional[str] = None
 
-class CompanyRespone(CompanyBase):
+class CompanyResponse(CompanyBase):
     id:int
     jobs: list[JobResponse]
 
-    class config:
+    class Config:
         from_attributes = True
