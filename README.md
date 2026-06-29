@@ -83,3 +83,9 @@ CREATE TABLE Students(
     - To create a session with the database for a single request
 - declartive_base
     - To create a base class for all the models
+
+
+pip install alembic
+alembic init alembic
+alembic revision --autogenerate -m  "initial migrations"
+alembic upgrade head
