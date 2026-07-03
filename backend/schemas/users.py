@@ -18,5 +18,9 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 class Login_User(BaseModel):
+    username: str  # OAuth2 standard uses 'username' field
+    password: str
+
+class LoginEmail(BaseModel):
     email: str
     password: str
