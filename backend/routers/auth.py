@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, HTTPException, Request
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session 
 from models.users import User
-from schemas.users import UserCreate, UserResponse, Login_User
+from schemas.users import UserCreate, UserResponse
 from schemas.token import Token
 from database import get_db
 from utils.security import hash_password, verify_password
@@ -28,24 +28,37 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 @router.post("/login", response_model=Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login(request: Request, db: Session = Depends(get_db)):
     """
     OAuth2 compatible token endpoint.
-    Accepts form-data with username and password fields.
-    Username can be either email or username.
+    Accepts both form-data and JSON with username/email and password.
     """
-    # form_data.username can be email or username
-    username_or_email = form_data.username
-    password = form_data.password
-    
-    # Try to find user by email (assuming username is email)
-    existing_user = db.query(User).filter(User.email == username_or_email).first()
-    
+    content_type = request.headers.get("content-type", "")
+
+    if "application/json" in content_type:
+        payload = await request.json()
+        username_or_email = (payload.get("username") or payload.get("email") or "").strip()
+        password = (payload.get("password") or "").strip()
+    else:
+        form_data = await request.form()
+        username_or_email = (form_data.get("username") or form_data.get("email") or "").strip()
+        password = (form_data.get("password") or "").strip()
+
+    if not username_or_email or not password:
+        raise HTTPException(status_code=400, detail="Email/username and password are required")
+
+    existing_user = db.query(User).filter(
+        or_(
+            func.lower(User.email) == func.lower(username_or_email),
+            func.lower(User.name) == func.lower(username_or_email),
+        )
+    ).first()
+
     if not existing_user:
         raise HTTPException(status_code=401, detail="Incorrect email or password")
-    
+
     if not verify_password(password, existing_user.hashed_password):
         raise HTTPException(status_code=401, detail="Incorrect email or password")
-    
+
     access_token = create_access_token(data={"sub": str(existing_user.id), "role": existing_user.role})
     return {"access_token": access_token, "token_type": "Bearer"}
