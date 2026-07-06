@@ -1,18 +1,26 @@
+import "./NavBar.css";
+
 type Props = {
     onLogout?: () => void;
 }
 
-function NavBar({onLogout}: Props){
-    return(
-        <nav>
+function NavBar({ onLogout }: Props) {
+    return (
+        <nav className="navbar">
             <ul>
                 <li>Home</li>
                 <li>About</li>
                 <li>Contact</li>
-                {onLogout && <li style={{float: 'right'}}><button onClick={onLogout} style={{background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem'}}>Logout</button></li>}
+                {onLogout && (
+                    <li className="logout-item">
+                        <button className="logout-btn" onClick={onLogout}>
+                            Logout
+                        </button>
+                    </li>
+                )}
             </ul>
         </nav>
     )
 }
 
-export default NavBar
+export default NavBar;

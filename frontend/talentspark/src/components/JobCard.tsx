@@ -1,12 +1,21 @@
-function JobCard(){
-    return(
-        <div>
-            <h1>Software Engineer</h1>
-            <p>Google</p>
-            <p>Bangalore</p>
-            <p>5 LPA</p>
+import "./jobCard.css";
+
+type Props = {
+    title?: string;
+    company?: string;
+    location?: string;
+    salary?: string;
+}
+
+function JobCard({ title = "Software Engineer", company = "Google", location = "Bangalore", salary = "5 LPA" }: Props) {
+    return (
+        <div className="job-card">
+            <h3 className="job-title">{title}</h3>
+            <p className="job-company">{company}</p>
+            <p className="job-location">{location}</p>
+            <p className="job-salary">{salary}</p>
         </div>
     )
 }
 
-export default JobCard
+export default JobCard;

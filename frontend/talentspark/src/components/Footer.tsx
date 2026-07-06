@@ -1,9 +1,11 @@
+import "./Footer.css";
+
 function Footer() {
     return (
-        <footer>
+        <footer className="footer">
             <p>All rights reserved by Talentspark</p>
         </footer>
     )
 }
 
-export default Footer
+export default Footer;

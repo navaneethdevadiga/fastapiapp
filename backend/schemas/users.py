@@ -14,8 +14,7 @@ class UserResponse(BaseModel):
     name: str
     email: str
     role: str
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 class Login_User(BaseModel):
     username: str  # OAuth2 standard uses 'username' field

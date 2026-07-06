@@ -1,0 +1,36 @@
+/* Job Card Styles */
+.job-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.job-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+.job-title {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-h);
+  font-size: 1.25rem;
+}
+
+.job-company {
+  margin: 0.25rem 0;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.job-location {
+  margin: 0.25rem 0;
+  color: var(--text);
+}
+
+.job-salary {
+  margin: 0.25rem 0;
+  color: var(--text);
+}
