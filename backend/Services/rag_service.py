@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
-from services.qdrant_service import search_jobs
+from Services.qdrant_service import search_jobs
 load_dotenv()
 llm = ChatGroq(
     model="llama-3.3-70b-versatile",
