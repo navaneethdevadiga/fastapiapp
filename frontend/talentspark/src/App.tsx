@@ -2,6 +2,7 @@ import NavBar from "./components/NavBar";
 import CompanyCard from "./components/CompanyCard";
 import JobList from "./components/JobList";
 import ChatBox from "./components/ChatBox";
+import ResumeAnalyzer from "./components/ResumeAnalyzer";
 import Footer from "./components/Footer";
 import Login from "./pages/login";
 import Register from "./pages/register";
@@ -10,6 +11,7 @@ import { getCompanies, updateCompany, deleteCompany, createCompany } from "./Ser
 import { isLoggedIn, logout } from "./Services/AuthService";
 import type { Company } from "./types/company";
 import "./App.css";
+import "./styles.css";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -123,6 +125,7 @@ function App() {
                     onadd={handleAdd}
                 />
                 <JobList />
+                <ResumeAnalyzer />
                 <ChatBox />
             </main>
             <Footer />

@@ -7,10 +7,14 @@ type Props = {
 function NavBar({ onLogout }: Props) {
     return (
         <nav className="navbar">
-            <ul>
-                <li>Home</li>
-                <li>About</li>
-                <li>Contact</li>
+            <a href="#" className="navbar-brand">
+                <div className="navbar-logo">TS</div>
+                <span>TalentSpark</span>
+            </a>
+            <ul className="navbar-nav">
+                <li className="nav-item active">Home</li>
+                <li className="nav-item">About</li>
+                <li className="nav-item">Contact</li>
                 {onLogout && (
                     <li className="logout-item">
                         <button className="logout-btn" onClick={onLogout}>
