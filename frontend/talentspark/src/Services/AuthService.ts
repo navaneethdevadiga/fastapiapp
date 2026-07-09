@@ -3,18 +3,21 @@ import axios from "axios";
 const API_URL = "http://localhost:8000/auth";
 
 export const login = async (credentials:LoginRequest):Promise<LoginResponse>=>{
-    const response = await axios.post<LoginResponse>(`${API_URL}/login`, {
-        username: credentials.email,
-        password: credentials.password,
+    const params = new URLSearchParams();
+    params.append("username", credentials.email);
+    params.append("password", credentials.password);
+
+    const response = await axios.post<LoginResponse>(`${API_URL}/login`, params, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
 
     localStorage.setItem("token", response.data.access_token);
     return response.data;
 }
 
-export const register = async (user:RegisterRequest):Promise<RegisterResponse>=>{
-    const response = await axios.post<RegisterResponse>(`${API_URL}/register`,user);
-    return response.data;
+export const register = async (user:RegisterRequest):Promise<LoginResponse>=>{
+    await axios.post<RegisterResponse>(`${API_URL}/register`, user);
+    return await login({ email: user.email, password: user.password });
 }
 
 export const logout = () => {

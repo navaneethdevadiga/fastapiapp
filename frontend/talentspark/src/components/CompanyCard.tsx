@@ -21,6 +21,7 @@ function CompanyCard({
         location: "",
         jobs: []
     });
+    const [formError, setFormError] = useState<string>("");
     const [editform, setEditform] = useState<Company>({
         id: 0,
         name: "",
@@ -30,28 +31,63 @@ function CompanyCard({
         jobs: []
     });
 
-    const handleAdd = () => {
-        onadd(addform);
-        setAddform({
-            id: 0,
-            name: "",
-            email: "",
-            phone: "",
-            location: "",
-            jobs: []
-        });
+    const handleAdd = async () => {
+        setFormError("");
+        // Basic client-side validation to avoid submitting empty strings
+        if (!addform.name.trim() || !addform.email.trim() || !addform.phone.trim() || !addform.location.trim()) {
+            setFormError("All fields are required.");
+            return;
+        }
+        try {
+            await onadd({
+                ...addform,
+                // trim whitespace
+                name: addform.name.trim(),
+                email: addform.email.trim(),
+                phone: addform.phone.trim(),
+                location: addform.location.trim(),
+            });
+            setAddform({
+                id: 0,
+                name: "",
+                email: "",
+                phone: "",
+                location: "",
+                jobs: []
+            });
+        } catch (error: any) {
+            console.error("Failed to add company:", error);
+            setFormError(error?.response?.data?.detail || "Failed to add company");
+        }
     };
 
-    const handleSave = () => {
-        onedit(editform);
-        setEditform({
-            id: 0,
-            name: "",
-            email: "",
-            phone: "",
-            location: "",
-            jobs: []
-        });
+    const handleSave = async () => {
+        setFormError("");
+        if (!editform.name.trim() || !editform.email.trim() || !editform.phone.trim() || !editform.location.trim()) {
+            setFormError("All fields are required.");
+            return;
+        }
+        try {
+            await onedit({
+                ...editform,
+                name: editform.name.trim(),
+                email: editform.email.trim(),
+                phone: editform.phone.trim(),
+                location: editform.location.trim(),
+            });
+            setEditCompanyId(null);
+            setEditform({
+                id: 0,
+                name: "",
+                email: "",
+                phone: "",
+                location: "",
+                jobs: []
+            });
+        } catch (error: any) {
+            console.error("Failed to save company:", error);
+            setFormError(error?.response?.data?.detail || "Failed to save company");
+        }
     };
 
     const handleCancel = () => {
@@ -74,6 +110,7 @@ function CompanyCard({
     return (
         <div className="company-section">
             <h2>Companies</h2>
+            {formError && <p className="form-error">{formError}</p>}
             <div className="company-list">
                 {companies.map((company) => (
                     <div key={company.id} className="company-card">
@@ -106,8 +143,8 @@ function CompanyCard({
                                     />
                                 </div>
                                 <div className="company-actions">
-                                    <button className="edit-btn" onClick={handleSave}>Save</button>
-                                    <button className="delete-btn" onClick={handleCancel}>Cancel</button>
+                                    <button type="button" className="edit-btn" onClick={handleSave}>Save</button>
+                                    <button type="button" className="delete-btn" onClick={handleCancel}>Cancel</button>
                                 </div>
                             </div>
                         ) : (
@@ -123,8 +160,8 @@ function CompanyCard({
                                     <p><span className="label">Location:</span> {company.location}</p>
                                 </div>
                                 <div className="company-actions">
-                                    <button className="edit-btn" onClick={() => startEdit(company)}>Edit</button>
-                                    <button className="delete-btn" onClick={() => ondelete(company.id)}>Delete</button>
+                                    <button type="button" className="edit-btn" onClick={() => startEdit(company)}>Edit</button>
+                                    <button type="button" className="delete-btn" onClick={() => ondelete(company.id)}>Delete</button>
                                 </div>
                             </>
                         )}
@@ -160,7 +197,7 @@ function CompanyCard({
                         placeholder="Location"
                     />
                 </div>
-                <button className="add-btn" onClick={handleAdd}>Add Company</button>
+                <button type="button" className="add-btn" onClick={handleAdd}>Add Company</button>
             </div>
         </div>
     )

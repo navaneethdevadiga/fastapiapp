@@ -41,10 +41,17 @@ function App() {
 
     async function handleEdit(company: Company) {
         try {
-            const updatedCompany = await updateCompany(company.id, company);
-            setCompanies(companies.map((c) => c.id === updatedCompany.id ? updatedCompany : c));
+            const payload = {
+                name: company.name,
+                email: company.email,
+                phone: company.phone,
+                location: company.location,
+            };
+            const updatedCompany = await updateCompany(company.id, payload);
+            setCompanies((prevCompanies) => prevCompanies.map((c) => c.id === updatedCompany.id ? updatedCompany : c));
         } catch (err) {
             setError(err as Error);
+            throw err;
         }
     }
 
@@ -59,10 +66,17 @@ function App() {
 
     async function handleAdd(company: Company) {
         try {
-            const newCompany = await createCompany(company);
-            setCompanies([...companies, newCompany]);
+            const payload = {
+                name: company.name,
+                email: company.email,
+                phone: company.phone,
+                location: company.location,
+            };
+            const newCompany = await createCompany(payload);
+            setCompanies((prevCompanies) => [...prevCompanies, newCompany]);
         } catch (err) {
             setError(err as Error);
+            throw err;
         }
     }
 

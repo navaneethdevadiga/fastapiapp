@@ -20,14 +20,14 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
         if existing_user:
             raise HTTPException(status_code=400, detail="Email already exists")
 
-        result = await db.execute(select(User).filter(User.username == user.name))
+        result = await db.execute(select(User).filter(User.name == user.name))
         existing_username = result.scalars().first()
         if existing_username:
             raise HTTPException(status_code=400, detail="Username already exists")
 
         hashed_password = hash_password(user.password)
         db_user = User(
-            username=user.name,
+            name=user.name,
             email=user.email,
             hashed_password=hashed_password,
             role=user.role
@@ -50,33 +50,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error during login: {str(e)}")
     result = await db.execute(select(User).filter(User.email == email))
-    existing_user = result.scalars().first()
-    if not existing_user:
-        raise HTTPException(status_code=404, detail="User not found")
-    if not verify_password(password, existing_user.hashed_password):
-        raise HTTPException(status_code=400, detail="Invalid password")
-    access_token = create_access_token(data={"sub": str(existing_user.id), "role": existing_user.role})
-    return {"access_token": access_token, "token": access_token, "token_type": "bearer"}                
-    db_user = User(
-        username=user.name,
-        email=user.email,
-        hashed_password=hashed_password,
-        role=user.role
-    )
-    try:
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=400, detail="User already exists") from None
-    return db_user
-
-@router.post("/login", response_model=Token)
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
-    email = form_data.username
-    password = form_data.password
-    result = await db.execute(select(User).where(User.email == email))
     existing_user = result.scalars().first()
     if not existing_user:
         raise HTTPException(status_code=404, detail="User not found")

@@ -19,6 +19,6 @@ class CompanyUpdate(CompanyBase):
     pass
 class CompanyResponse(CompanyBase):
     id:int
-    jobs: list[JobResponse]
+    jobs: list[JobResponse] = []
     
     model_config = {"from_attributes": True}

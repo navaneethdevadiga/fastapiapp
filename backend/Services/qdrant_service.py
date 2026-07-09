@@ -12,9 +12,13 @@ load_dotenv()
 COLLECTION_NAME = "job_descriptions"
 VECTOR_SIZE = 384 # BAAI/bge-small-en-v1.5 outputs 384-dim vectors
 
+QDRANT_URL = os.getenv("QDRANT_URL")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+
 qdrant = QdrantClient(
-    url=os.getenv("QDRANT_URL"),
-    api_key=os.getenv("QDRANT_API_KEY"),
+    url=QDRANT_URL,
+    api_key=QDRANT_API_KEY,
+    check_compatibility=False,
 )
 
 embeddings_model = TextEmbedding("BAAI/bge-small-en-v1.5")
